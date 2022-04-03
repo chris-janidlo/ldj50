@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace LDJ50.GameState
+namespace LDJ50.CoreRules
 {
     public struct Board
     {
@@ -23,6 +24,23 @@ namespace LDJ50.GameState
                 position.y >= 0 && position.y < SIDE_LENGTH;
         }
 
+        public override int GetHashCode ()
+        {
+            unchecked
+            {
+                if (Positions == null)
+                {
+                    return 0;
+                }
+                int hash = 17;
+                foreach (Piece? element in Positions)
+                {
+                    hash = hash * 31 + element.GetHashCode();
+                }
+                return hash;
+            }
+        }
+
         public Piece? GetPiece (Vector2Int position)
         {
             return Positions[position.x, position.y];
@@ -31,6 +49,23 @@ namespace LDJ50.GameState
         public void SetPiece (Piece piece, Vector2Int position)
         {
             Positions[position.x, position.y] = piece;
+        }
+
+        public IEnumerable<Piece> GetPiecesByOwner (Player owner)
+        {
+            foreach (Piece? piece in Positions)
+            {
+                if (piece?.Owner == owner) yield return piece.Value;
+            }
+        }
+
+        public bool IsLossForPlayer (Player player)
+        {
+            foreach (Piece? piece in Positions)
+            {
+                if (piece?.Owner == player) return false;
+            }
+            return true;
         }
     }
 }

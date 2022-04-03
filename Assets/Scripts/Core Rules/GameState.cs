@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LDJ50.GameState
+namespace LDJ50.CoreRules
 {
     public struct GameState
     {
@@ -43,35 +43,55 @@ namespace LDJ50.GameState
             };
         }
 
+        public override int GetHashCode () => (Board, CurrentPlayer, IsLossState).GetHashCode();
+
         public IEnumerable<GameState> LegalFutureStates ()
         {
-            GameState originalState = this;
-            Player player = CurrentPlayer;
-            Board board = Board;
+            HashSet<GameState> seenStates = new HashSet<GameState>();
+            IEnumerable<Piece> pieces = Board.GetPiecesByOwner(CurrentPlayer);
 
-            return board.Positions
-                .Cast<Piece?>()
-                .Where(p => p?.Owner == player)
-                .SelectMany(p => p.Value.LegalMoves(board)
-                    .Select(m => ApplyMove(originalState, new Piece { Owner = player, Position = m.Item1, Form = m.Item2 }, p.Value.Form.GetInteraction(), p.Value.Position))
-                );
+            foreach (var piece1 in pieces)
+            {
+                foreach (var move1 in piece1.LegalMoves(Board))
+                {
+                    GameState intermediateState = ApplyMove(this, piece1, move1);
+                    foreach (var piece2 in pieces)
+                    {
+                        if (piece1 == piece2) continue;
+
+                        foreach (var move2 in piece2.LegalMoves(intermediateState.Board))
+                        {
+                            GameState finalState = ApplyMove(intermediateState, piece2, move2);
+                            if (seenStates.Contains(finalState)) continue;
+
+                            seenStates.Add(finalState);
+                            yield return finalState;
+                        }
+                    }
+                }
+            }
         }
 
         // assumes move is legal
-        static GameState ApplyMove (GameState originalState, Piece newPiece, PieceInteraction pieceInteraction, Vector2Int originalPosition)
+        static GameState ApplyMove (GameState originalState, Piece oldPiece, Piece newPiece)
         {
             GameState result = originalState;
             result.Board = Board.CreateBoard(); // since the above line results in a fast memory copy, we need to create a new Board in order to not overwrite the one in originalState
 
             result.Board.Positions = originalState.Board.Positions.Clone() as Piece?[,];
 
-            if (result.Board.GetPiece(newPiece.Position) is Piece conflictingPiece && pieceInteraction == PieceInteraction.Swap)
+            if (result.Board.GetPiece(newPiece.Position) is Piece conflictingPiece && oldPiece.Form.GetInteraction() == PieceInteraction.Swap)
             {
-                conflictingPiece.Position = originalPosition;
-                result.Board.SetPiece(conflictingPiece, originalPosition);
+                conflictingPiece.Position = oldPiece.Position;
+                result.Board.SetPiece(conflictingPiece, oldPiece.Position);
             }
 
             result.Board.SetPiece(newPiece, newPiece.Position);
+
+            result.CurrentPlayer = originalState.CurrentPlayer == Player.AI
+                ? Player.Human
+                : Player.AI;
+            result.IsLossState = result.Board.IsLossForPlayer(result.CurrentPlayer);
 
             return result;
         }
