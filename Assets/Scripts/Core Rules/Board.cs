@@ -1,3 +1,4 @@
+using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +16,27 @@ namespace LDJ50.CoreRules
             {
                 Positions = new Piece?[SIDE_LENGTH, SIDE_LENGTH]
             };
+        }
+
+        public static Board DeepClone (Board other)
+        {
+            Board result = CreateBoard();
+            for (int x = 0; x < SIDE_LENGTH; x++)
+            {
+                for (int y = 0; y < SIDE_LENGTH; y++)
+                {
+                    if (other.Positions[x, y] is Piece piece)
+                    {
+                        result.Positions[x, y] = new Piece
+                        {
+                            Owner = piece.Owner,
+                            Position = piece.Position,
+                            Form = piece.Form
+                        };
+                    }
+                }
+            }
+            return result;
         }
 
         public static bool InBounds (Vector2Int position)
@@ -41,6 +63,21 @@ namespace LDJ50.CoreRules
             }
         }
 
+        public override string ToString ()
+        {
+            var result = new StringBuilder();
+            for (int x = 0; x < SIDE_LENGTH; x++)
+            {
+                for (int y = 0; y < SIDE_LENGTH; y++)
+                {
+                    result.Append(Positions[x, y]?.ToChar() ?? '_');
+                    result.Append(' ');
+                }
+                result.Append('\n');
+            }
+            return result.ToString();
+        }
+
         public Piece? GetPiece (Vector2Int position)
         {
             return Positions[position.x, position.y];
@@ -49,6 +86,11 @@ namespace LDJ50.CoreRules
         public void SetPiece (Piece piece, Vector2Int position)
         {
             Positions[position.x, position.y] = piece;
+        }
+
+        public void RemovePiece (Vector2Int position)
+        {
+            Positions[position.x, position.y] = null;
         }
 
         public IEnumerable<Piece> GetPiecesByOwner (Player owner)

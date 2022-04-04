@@ -28,18 +28,18 @@ namespace LDJ50.CoreRules
                 return piece;
             }
 
-            addPiece(Player.Human, new Vector2Int(1, 0));
-            addPiece(Player.Human, new Vector2Int(0, 1));
+            addPiece(Player.Red, new Vector2Int(1, 0));
+            addPiece(Player.Red, new Vector2Int(0, 1));
 
             int aiCorner = Board.SIDE_LENGTH - 1;
 
-            addPiece(Player.AI, new Vector2Int(aiCorner - 1, aiCorner));
-            addPiece(Player.AI, new Vector2Int(aiCorner, aiCorner - 1));
+            addPiece(Player.Blue, new Vector2Int(aiCorner - 1, aiCorner));
+            addPiece(Player.Blue, new Vector2Int(aiCorner, aiCorner - 1));
 
             return new GameState
             {
                 Board = board,
-                CurrentPlayer = Player.Human
+                CurrentPlayer = Player.Red
             };
         }
 
@@ -48,20 +48,36 @@ namespace LDJ50.CoreRules
         public IEnumerable<GameState> LegalFutureStates ()
         {
             HashSet<GameState> seenStates = new HashSet<GameState>();
-            IEnumerable<Piece> pieces = Board.GetPiecesByOwner(CurrentPlayer);
+            List<Piece> pieces = Board.GetPiecesByOwner(CurrentPlayer).ToList();
+
+            if (pieces.Count == 1)
+            {
+                Piece piece = pieces[0];
+
+                foreach (var move in piece.LegalMoves(Board))
+                {
+                    GameState state = ApplyMove(this, piece, move, true);
+                    if (seenStates.Contains(state)) continue;
+
+                    seenStates.Add(state);
+                    yield return state;
+                }
+
+                yield break;
+            }
 
             foreach (var piece1 in pieces)
             {
                 foreach (var move1 in piece1.LegalMoves(Board))
                 {
-                    GameState intermediateState = ApplyMove(this, piece1, move1);
+                    GameState intermediateState = ApplyMove(this, piece1, move1, false);
                     foreach (var piece2 in pieces)
                     {
                         if (piece1 == piece2) continue;
 
                         foreach (var move2 in piece2.LegalMoves(intermediateState.Board))
                         {
-                            GameState finalState = ApplyMove(intermediateState, piece2, move2);
+                            GameState finalState = ApplyMove(intermediateState, piece2, move2, true);
                             if (seenStates.Contains(finalState)) continue;
 
                             seenStates.Add(finalState);
@@ -73,24 +89,30 @@ namespace LDJ50.CoreRules
         }
 
         // assumes move is legal
-        static GameState ApplyMove (GameState originalState, Piece oldPiece, Piece newPiece)
+        static GameState ApplyMove (GameState originalState, Piece oldPiece, Piece newPiece, bool changePlayer)
         {
             GameState result = originalState;
-            result.Board = Board.CreateBoard(); // since the above line results in a fast memory copy, we need to create a new Board in order to not overwrite the one in originalState
-
-            result.Board.Positions = originalState.Board.Positions.Clone() as Piece?[,];
+            result.Board = Board.DeepClone(originalState.Board); // since the above line results in a fast memory copy, we need to create a new Board in order to not overwrite the one in originalState
 
             if (result.Board.GetPiece(newPiece.Position) is Piece conflictingPiece && oldPiece.Form.GetInteraction() == PieceInteraction.Swap)
             {
                 conflictingPiece.Position = oldPiece.Position;
                 result.Board.SetPiece(conflictingPiece, oldPiece.Position);
             }
+            else
+            {
+                result.Board.RemovePiece(oldPiece.Position);
+            }
 
             result.Board.SetPiece(newPiece, newPiece.Position);
 
-            result.CurrentPlayer = originalState.CurrentPlayer == Player.AI
-                ? Player.Human
-                : Player.AI;
+            if (changePlayer)
+            {
+                result.CurrentPlayer = originalState.CurrentPlayer == Player.Blue
+                    ? Player.Red
+                    : Player.Blue;
+            }
+
             result.IsLossState = result.Board.IsLossForPlayer(result.CurrentPlayer);
 
             return result;

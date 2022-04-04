@@ -92,9 +92,9 @@ namespace LDJ50.CoreRules
 
         private static IEnumerable<Vector2Int> movement (Vector2Int currentPosition, Board board, int range, Vector2Int[] directions, PieceInteraction PieceInteraction)
         {
-            for (int r = 1; r <= range; r++)
+            foreach (Vector2Int dir in directions)
             {
-                foreach (Vector2Int dir in directions)
+                for (int r = 1; r <= range; r++)
                 {
                     Vector2Int candidatePosition = currentPosition + dir * r;
                     if (!Board.InBounds(candidatePosition)) break;

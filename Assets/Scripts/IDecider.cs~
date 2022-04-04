@@ -1,0 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using LDJ50.CoreRules;
+
+namespace LDJ50
+{
+    public delegate void DecisionCallback (GameState decision);
+
+    public interface IDecider
+    {
+        public
+    }
+}

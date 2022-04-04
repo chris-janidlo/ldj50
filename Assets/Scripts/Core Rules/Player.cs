@@ -6,6 +6,6 @@ namespace LDJ50.CoreRules
 {
     public enum Player
     {
-        Human, AI
+        Red, Blue
     }
 }
