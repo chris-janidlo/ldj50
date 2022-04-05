@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using LDJ50.CoreRules;
 
@@ -14,29 +15,31 @@ namespace LDJ50
 
         void Start ()
         {
-            DecisionMade(GameState.InitialGameState());
+            MoveDecided(GameState.InitialGameState());
         }
 
-        public void DecisionMade (GameState decision)
+        void MoveDecided (GameState decision)
         {
             GameState = decision;
 
-            if (decision.IsLossState || !decision.LegalFutureStates().Any())
+            if (GameState.IsLossState || !GameState.LegalFutureStates().Any())
             {
+                Debug.Log(GameState.Board);
+                Debug.Log($"{GameState.CurrentPlayer} loses");
                 endGame(GameState.CurrentPlayer);
             }
             else
             {
-                IDecider nextDecider = decision.CurrentPlayer == Player.Blue
+                IDecider nextDecider = GameState.CurrentPlayer == Player.Blue
                     ? BlueDecider
                     : RedDecider;
-                nextDecider.DecideMove(GameState, DecisionMade);
+                nextDecider.DecideMove(GameState, MoveDecided);
             }
         }
 
         void endGame (Player loser)
         {
-            throw new System.NotImplementedException("TODO: loss scene");
+            //throw new System.NotImplementedException("TODO: loss scene");
         }
     }
 }

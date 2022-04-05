@@ -8,6 +8,8 @@ namespace LDJ50.CoreRules
 {
     public struct GameState
     {
+        public const Player FIRST_PLAYER = Player.Red;
+
         public Board Board;
         public Player CurrentPlayer;
         public bool IsLossState;
@@ -39,9 +41,12 @@ namespace LDJ50.CoreRules
             return new GameState
             {
                 Board = board,
-                CurrentPlayer = Player.Red
+                CurrentPlayer = FIRST_PLAYER
             };
         }
+
+        public static bool operator == (GameState lhs, GameState rhs) => lhs.GetHashCode() == rhs.GetHashCode();
+        public static bool operator != (GameState lhs, GameState rhs) => !(lhs == rhs);
 
         public override int GetHashCode () => (Board, CurrentPlayer, IsLossState).GetHashCode();
 
