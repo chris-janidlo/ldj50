@@ -16,6 +16,7 @@ namespace LDJ50.MCTS
         public int Visits { get; protected set; }
 
         public bool IsLeaf => children.Count == 0;
+        public bool IsTerminalState => GameState.IsLossState;
 
         public IReadOnlyList<MCTSNode> Children => children.AsReadOnly();
 
@@ -44,6 +45,11 @@ namespace LDJ50.MCTS
             }
 
             return currentCandiate;
+        }
+
+        public MCTSNode ChildWithState (GameState state)
+        {
+            return children.FirstOrDefault(n => n.GameState == state);
         }
 
         public MCTSNode BestChild ()

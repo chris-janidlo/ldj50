@@ -22,11 +22,11 @@ namespace LDJ50.MCTS
 
         public GameState Search (GameState startingState)
         {
-            MCTSNode root = previousChoice?.Children.FirstOrDefault(c => c.GameState == startingState) // TODO: is this accurate?
-                ?? new MCTSNode(startingState);
+            MCTSNode root = previousChoice?.ChildWithState(startingState) ?? new MCTSNode(startingState);
             root.Detach();
+            root.Expand(); // always need at least one level expanded from the root
 
-            foreach (var _ in Enumerable.Range(0, 1))
+            foreach (var _ in Enumerable.Range(0, 10))
             {
                 MCTSNode leaf = traverse(root); // selection and expansion
                 float score = rollout(leaf); // rollout
@@ -42,10 +42,12 @@ namespace LDJ50.MCTS
             MCTSNode node = root;
             while (!node.IsLeaf) node = node.ExplorationCandidate();
 
-            if (node.Visits == 0) return node;
+            // terminal nodes are essentially rollouts that are decided instantly. https://ai.stackexchange.com/a/6993/53886 has ideas for improvements here
+            if (node.Visits == 0 || node.IsTerminalState) return node;
 
             node.Expand();
-            return node.Children.First(); // technically all children will have the highest possible exploration score of infinity due to never having been explored, so skip the calculation and just grab the first one
+            // technically all children will have the highest possible exploration score of infinity due to never having been explored, so skip the calculation and just grab the first one
+            return node.Children.First();
         }
 
         float rollout (MCTSNode node)

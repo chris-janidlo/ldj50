@@ -13,7 +13,7 @@ namespace LDJ50
 
         public GameState GameState { get; private set; }
 
-        void Start ()
+        void Update ()
         {
             MoveDecided(GameState.InitialGameState());
         }
