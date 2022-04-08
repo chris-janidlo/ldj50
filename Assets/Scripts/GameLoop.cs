@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,10 +17,10 @@ namespace LDJ50
 
         void Start ()
         {
-            StartCoroutine(PlayOutGame().ToCoroutine());
+            StartCoroutine(PlayOutGame(this.GetCancellationTokenOnDestroy()).ToCoroutine());
         }
 
-        async UniTask PlayOutGame ()
+        async UniTask PlayOutGame (CancellationToken token)
         {
             GameState = GameState.InitialGameState();
 
@@ -28,7 +29,7 @@ namespace LDJ50
                 IDecider nextDecider = GameState.CurrentPlayer == Player.Blue
                     ? BlueDecider
                     : RedDecider;
-                GameState = await nextDecider.DecideMove(GameState);
+                GameState = await nextDecider.DecideMove(GameState, token);
             }
 
             endGame(GameState.CurrentPlayer);

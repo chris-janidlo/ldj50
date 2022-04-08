@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,11 +16,11 @@ namespace LDJ50
 
         MCTSSearcher searcher;
 
-        public override async UniTask<GameState> DecideMove (GameState currentState)
+        public override async UniTask<GameState> DecideMove (GameState currentState, CancellationToken token)
         {
             if (searcher == null) searcher = new MCTSSearcher(currentState.CurrentPlayer, SearchParameters);
 
-            return await Task.Run(() => searcher.Search(currentState));
+            return await Task.Run(() => searcher.Search(currentState), cancellationToken: token);
         }
     }
 }
