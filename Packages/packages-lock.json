@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "e81d64830309e5ca06824cf9f9b3d9efacf4faad"
     },
+    "com.cysharp.unitask": {
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "9e2163616b9c527fa9461544e2bcc5f93fd12d83"
+    },
     "com.mambojambostudios.unity-atoms-base-atoms": {
       "version": "4.1.0",
       "depth": 0,

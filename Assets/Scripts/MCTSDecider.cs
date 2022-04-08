@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LDJ50.CoreRules;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using LDJ50.CoreRules;
 using LDJ50.MCTS;
 
 namespace LDJ50
@@ -14,11 +15,11 @@ namespace LDJ50
 
         MCTSSearcher searcher;
 
-        public override void DecideMove (GameState currentState, DecisionCallback callback)
+        public override async UniTask<GameState> DecideMove (GameState currentState)
         {
             if (searcher == null) searcher = new MCTSSearcher(currentState.CurrentPlayer, SearchParameters);
 
-            callback(searcher.Search(currentState));
+            return await Task.Run(() => searcher.Search(currentState));
         }
     }
 }

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: MCTS Decider
   m_EditorClassIdentifier: 
   SearchParameters:
-    Iterations: 10000
+    Iterations: 100
     ExplorationFactor: 2

@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "com.crass.spellbook-unity": "https://github.com/crassSandwich/spellbook-unity.git",
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
     "com.mambojambostudios.unity-atoms-base-atoms": "4.1.0",
     "com.mambojambostudios.unity-atoms-core": "4.1.0",
     "com.mambojambostudios.unity-atoms-fsm": "4.1.0",
