@@ -8,8 +8,6 @@ namespace LDJ50.MCTS
 {
     public class MCTSNode
     {
-        const float EXPLORATION_CONSTANT = 2;
-
         public GameState GameState { get; protected set; }
 
         public float TotalScore { get; protected set; }
@@ -23,10 +21,13 @@ namespace LDJ50.MCTS
         protected List<MCTSNode> children;
         protected MCTSNode parent;
 
-        public MCTSNode (GameState state)
+        protected readonly MCTSParameters searchParameters;
+
+        public MCTSNode (GameState state, MCTSParameters searchParameters)
         {
             GameState = state;
             children = new List<MCTSNode>();
+            this.searchParameters = searchParameters;
         }
 
         public MCTSNode ExplorationCandidate ()
@@ -73,7 +74,7 @@ namespace LDJ50.MCTS
         {
             foreach (GameState state in GameState.LegalFutureStates())
             {
-                addChild(new MCTSNode(state));
+                addChild(new MCTSNode(state, searchParameters));
             }
         }
 
@@ -100,7 +101,7 @@ namespace LDJ50.MCTS
         {
             if (Visits == 0) return float.PositiveInfinity;
             return TotalScore / Visits // prefer nodes with higher score
-                + EXPLORATION_CONSTANT * Mathf.Sqrt(Mathf.Log(parent.Visits) / Visits); // but also look at nodes that have been under-explored
+                + searchParameters.ExplorationFactor * Mathf.Sqrt(Mathf.Log(parent.Visits) / Visits); // but also look at nodes that have been under-explored
         }
     }
 }

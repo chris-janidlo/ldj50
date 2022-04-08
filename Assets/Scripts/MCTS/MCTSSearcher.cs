@@ -11,22 +11,25 @@ namespace LDJ50.MCTS
     {
         public Player Player { get; private set; }
 
-        MCTSNode previousChoice;
-        Random random;
+        readonly Random random;
+        readonly MCTSParameters searchParameters;
 
-        public MCTSSearcher (Player player)
+        MCTSNode previousChoice;
+
+        public MCTSSearcher (Player player, MCTSParameters searchParameters)
         {
             Player = player;
             random = new Random();
+            this.searchParameters = searchParameters;
         }
 
         public GameState Search (GameState startingState)
         {
-            MCTSNode root = previousChoice?.ChildWithState(startingState) ?? new MCTSNode(startingState);
+            MCTSNode root = previousChoice?.ChildWithState(startingState) ?? new MCTSNode(startingState, searchParameters);
             root.Detach();
             root.Expand(); // always need at least one level expanded from the root
 
-            foreach (var _ in Enumerable.Range(0, 10))
+            for (int i = 0; i < searchParameters.Iterations; i++)
             {
                 MCTSNode leaf = traverse(root); // selection and expansion
                 float score = rollout(leaf); // rollout
