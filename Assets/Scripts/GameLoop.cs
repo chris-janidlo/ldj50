@@ -16,10 +16,10 @@ namespace LDJ50
 
         void Start ()
         {
-            MainLoop();
+            StartCoroutine(PlayOutGame().ToCoroutine());
         }
 
-        async void MainLoop ()
+        async UniTask PlayOutGame ()
         {
             GameState = GameState.InitialGameState();
 
