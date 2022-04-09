@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace LDJ50.CoreRules
 {
-    public struct GameState
+    public struct GameState : IEquatable<GameState>
     {
         public const Player FIRST_PLAYER = Player.Red;
 
@@ -49,6 +49,9 @@ namespace LDJ50.CoreRules
         public static bool operator != (GameState lhs, GameState rhs) => !(lhs == rhs);
 
         public override int GetHashCode () => (Board, CurrentPlayer, IsLossState).GetHashCode();
+
+        public bool Equals (GameState other) => this == other;
+        public override bool Equals (object obj) => obj is GameState other && this == other;
 
         public IEnumerable<GameState> LegalFutureStates ()
         {
