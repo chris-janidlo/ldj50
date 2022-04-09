@@ -8,7 +8,7 @@ namespace LDJ50.CoreRules
 {
     public struct GameState : IEquatable<GameState>
     {
-        public const Player FIRST_PLAYER = Player.Red;
+        public const Player FIRST_PLAYER = Player.Blue;
 
         public Board Board;
         public Player CurrentPlayer;
@@ -18,7 +18,7 @@ namespace LDJ50.CoreRules
         {
             Board board = Board.CreateBoard();
 
-            Piece addPiece (Player owner, Vector2Int position)
+            void addPiece (Player owner, Vector2Int position)
             {
                 Piece piece = new Piece
                 {
@@ -27,16 +27,15 @@ namespace LDJ50.CoreRules
                     Position = position
                 };
                 board.SetPiece(piece, position);
-                return piece;
             }
 
-            addPiece(Player.Red, new Vector2Int(1, 0));
-            addPiece(Player.Red, new Vector2Int(0, 1));
+            addPiece(Player.Blue, new Vector2Int(1, 0));
+            addPiece(Player.Blue, new Vector2Int(0, 1));
 
-            int aiCorner = Board.SIDE_LENGTH - 1;
+            int redCorner = Board.SIDE_LENGTH - 1;
 
-            addPiece(Player.Blue, new Vector2Int(aiCorner - 1, aiCorner));
-            addPiece(Player.Blue, new Vector2Int(aiCorner, aiCorner - 1));
+            addPiece(Player.Red, new Vector2Int(redCorner - 1, redCorner));
+            addPiece(Player.Red, new Vector2Int(redCorner, redCorner - 1));
 
             return new GameState
             {

@@ -11,7 +11,7 @@ namespace LDJ50
 {
     public class GameLoop : MonoBehaviour
     {
-        public IDecider RedDecider, BlueDecider;
+        public IDecider BlueDecider, RedDecider;
 
         public GameState GameState { get; private set; }
 
