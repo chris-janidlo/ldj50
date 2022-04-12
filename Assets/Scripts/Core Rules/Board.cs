@@ -27,12 +27,7 @@ namespace LDJ50.CoreRules
                 {
                     if (other.Positions[x, y] is Piece piece)
                     {
-                        result.Positions[x, y] = new Piece
-                        {
-                            Owner = piece.Owner,
-                            Position = piece.Position,
-                            Form = piece.Form
-                        };
+                        result.Positions[x, y] = piece.Clone();
                     }
                 }
             }

@@ -7,10 +7,10 @@ namespace LDJ50.CoreRules
 {
     public struct Piece
     {
+        public string ID;
         public Player Owner;
 
         public Form Form;
-
         public Vector2Int Position;
 
         public static bool operator == (Piece lhs, Piece rhs) =>
@@ -20,7 +20,15 @@ namespace LDJ50.CoreRules
 
         public static bool operator != (Piece lhs, Piece rhs) => !(lhs == rhs);
 
-        public override int GetHashCode () => (Owner, Form, Position).GetHashCode();
+        public override int GetHashCode () => (Owner, Form, Position).GetHashCode(); // deliberately exclude ID from the hashcode computation because we use the hashcode to calculate value equality, and we want to treat two pieces that are identical except for their ID as equal when comparing board layouts
+
+        public Piece (string id, Player owner, Form form, Vector2Int position)
+        {
+            ID = id;
+            Owner = owner;
+            Form = form;
+            Position = position;
+        }
 
         public IEnumerable<Piece> LegalMoves (Board board)
         {
@@ -28,7 +36,7 @@ namespace LDJ50.CoreRules
             {
                 foreach (Form legalForm in Form.GetFormTransitions())
                 {
-                    yield return new Piece { Owner = Owner, Position = legalPosition, Form = legalForm };
+                    yield return new Piece(ID, Owner, legalForm, legalPosition);
                 }
             }
         }
@@ -52,6 +60,11 @@ namespace LDJ50.CoreRules
                 Player.Red => char.ToUpper(c),
                 _ => throw new InvalidOperationException($"unexpected {Owner.GetType().Name} value {Owner}")
             };
+        }
+
+        public Piece Clone ()
+        {
+            return new Piece(ID, Owner, Form, Position);
         }
     }
 }
