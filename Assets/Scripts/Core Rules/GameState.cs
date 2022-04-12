@@ -50,7 +50,7 @@ namespace LDJ50.CoreRules
         public IEnumerable<GameState> LegalFutureStates ()
         {
             HashSet<GameState> seenStates = new HashSet<GameState>();
-            List<Piece> pieces = Board.GetPiecesByOwner(CurrentPlayer).ToList();
+            List<Piece> pieces = PiecesOwnedByCurrentPlayer().ToList();
 
             if (pieces.Count == 1)
             {
@@ -90,8 +90,34 @@ namespace LDJ50.CoreRules
             }
         }
 
+        public IEnumerable<Vector2Int> LegalPositionsForPieceAt (Vector2Int position)
+        {
+            if (!(Board.GetPiece(position) is Piece piece)) throw new ArgumentException($"there is no piece at {position}");
+
+            return piece.Form.GetLegalBoardPositions(position, Board);
+        }
+
+        public IEnumerable<Form> LegalFormTransitionsForPieceAt (Vector2Int position)
+        {
+            if (!(Board.GetPiece(position) is Piece piece)) throw new ArgumentException($"there is no piece at {position}");
+
+            return piece.Form.GetFormTransitions();
+        }
+
+        public IEnumerable<Piece> PiecesOwnedByCurrentPlayer ()
+        {
+            return Board.GetPiecesByOwner(CurrentPlayer);
+        }
+
+        public void FlipPlayer ()
+        {
+            CurrentPlayer = CurrentPlayer == Player.Blue
+                ? Player.Red
+                : Player.Blue;
+        }
+
         // assumes move is legal
-        static GameState ApplyMove (GameState originalState, Piece oldPiece, Piece newPiece, bool changePlayer)
+        public static GameState ApplyMove (GameState originalState, Piece oldPiece, Piece newPiece, bool changePlayer)
         {
             GameState result = originalState;
             result.Board = Board.DeepClone(originalState.Board); // since the above line results in a fast memory copy, we need to create a new Board in order to not overwrite the one in originalState
@@ -108,12 +134,7 @@ namespace LDJ50.CoreRules
 
             result.Board.SetPiece(newPiece, newPiece.Position);
 
-            if (changePlayer)
-            {
-                result.CurrentPlayer = originalState.CurrentPlayer == Player.Blue
-                    ? Player.Red
-                    : Player.Blue;
-            }
+            if (changePlayer) result.FlipPlayer();
 
             result.IsLossState = result.Board.IsLossForPlayer(result.CurrentPlayer);
 

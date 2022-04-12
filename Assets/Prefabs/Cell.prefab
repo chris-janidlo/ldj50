@@ -139,7 +139,6 @@ MonoBehaviour:
   Coordinates: {x: 0, y: 0}
   PieceImage: {fileID: 6468902042135264248}
   Button: {fileID: 4376360586224026187}
-  Mapper: {fileID: 11400000, guid: 1c0df51c014254ddb865ac7f7c1e3ddd, type: 2}
   PieceSpriteGenerator: {fileID: 11400000, guid: 8c0dc2646a5a041ad88feb7ce9992f30,
     type: 2}
 --- !u!114 &5010390464084067842
@@ -285,7 +284,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0, g: 1, b: 0, a: 1}
     m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_SelectedColor: {r: 1, g: 0, b: 1, a: 1}
-    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
+    m_DisabledColor: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:

@@ -9,45 +9,32 @@ namespace LDJ50.KinUI
 {
     public class Cell : MonoBehaviour
     {
+        public delegate void ClickCallback (Cell cell);
+
         public Vector2Int Coordinates;
 
         public Image PieceImage;
         public Button Button;
-
-        public CellMapper Mapper;
         public PieceSpriteGenerator PieceSpriteGenerator;
 
-        Piece? currentPiece => currentState.Board.GetPiece(Coordinates);
-        GameState currentState;
+        ClickCallback currentCallback;
 
-        void Start ()
+        public void RegisterClickCallback (ClickCallback callback)
         {
-            Mapper.RegisterCell(Coordinates, this);
+            currentCallback = callback;
+            Button.interactable = currentCallback != null;
         }
 
-        public void OnPlayerDecisionNeeded (GameState gameState)
-        {
-            currentState = gameState;
-            updateImage();
-
-            Button.interactable = currentPiece?.Owner == gameState.CurrentPlayer;
-        }
-
-        public void OnPlayerDecisionMade (GameState gameState)
-        {
-            currentState = gameState;
-            Button.interactable = false;
-            updateImage();
-        }
+        public ClickCallback GetClickCallback () => currentCallback;
 
         public void OnClick ()
         {
-            throw new System.NotImplementedException();
+            currentCallback?.Invoke(this);
         }
 
-        void updateImage ()
+        public void UpdateImage (GameState state)
         {
-            (PieceImage.sprite, PieceImage.color) = PieceSpriteGenerator.GetSprite(currentPiece);
+            (PieceImage.sprite, PieceImage.color) = PieceSpriteGenerator.GetSprite(state.Board.GetPiece(Coordinates));
         }
     }
 }
