@@ -18,5 +18,10 @@ namespace LDJ50.KinUI
                 ? (FormSprites[piece.Form], PlayerColors[piece.Owner])
                 : (null, Color.clear);
         }
+
+        public Sprite GetGraphic (Form form)
+        {
+            return FormSprites[form];
+        }
     }
 }
