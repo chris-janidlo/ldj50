@@ -680,7 +680,7 @@ MonoBehaviour:
   ResetButton: {fileID: 754361199}
   ConfirmButton: {fileID: 873528433}
   FormButtons: {fileID: 948242662}
-  PlayerDecisionMade: {fileID: 11400000, guid: 0d11db9d963f04f10983bfef9649bc45, type: 2}
+  PlayerDecider: {fileID: 11400000, guid: aa5c6c04d2ab6482291ffc992d11d316, type: 2}
 --- !u!114 &512361505
 MonoBehaviour:
   m_ObjectHideFlags: 0

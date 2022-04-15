@@ -1,10 +1,12 @@
 using System;
+using System.Threading;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityAtoms.LDJ50Atoms;
+using Cysharp.Threading.Tasks;
 using LDJ50.CoreRules;
 
 namespace LDJ50.KinUI
@@ -33,7 +35,7 @@ namespace LDJ50.KinUI
         public Button ResetButton, ConfirmButton;
         public FormPopup FormButtons;
 
-        public GameStateEvent PlayerDecisionMade;
+        public PlayerDecider PlayerDecider;
 
         Dictionary<Vector2Int, Cell> positionMap;
         GameState masterState, workingState;
@@ -90,7 +92,7 @@ namespace LDJ50.KinUI
 
             resetButtons();
 
-            PlayerDecisionMade.Raise(masterState);
+            PlayerDecider.PlayerDecisionMade(masterState);
         }
 
         void resetButtons (ButtonType types = ButtonType.All)

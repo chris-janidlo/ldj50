@@ -11,23 +11,22 @@ namespace LDJ50
     [CreateAssetMenu(menuName = "LDJ50/Deciders/Player", fileName = "newPlayerDecider.asset")]
     public class PlayerDecider : IDecider
     {
-        public GameStateEvent PlayerDecisionNeeded, PlayerDecisionMade;
+        public GameStateEvent PlayerDecisionNeeded;
+
+        UniTaskCompletionSource<GameState> currentTcs;
 
         // TODO: use cancellation token
         public override UniTask<GameState> DecideMove (GameState currentState, CancellationToken token)
         {
             PlayerDecisionNeeded.Raise(currentState);
 
-            UniTaskCompletionSource<GameState> tcs = new UniTaskCompletionSource<GameState>();
+            currentTcs = new UniTaskCompletionSource<GameState>();
+            return currentTcs.Task;
+        }
 
-            void decisionCallback (GameState decision)
-            {
-                tcs.TrySetResult(decision);
-                PlayerDecisionMade.Unregister(decisionCallback);
-            }
-            PlayerDecisionMade.Register(decisionCallback);
-
-            return tcs.Task;
+        public void PlayerDecisionMade (GameState decision)
+        {
+            currentTcs.TrySetResult(decision);
         }
     }
 }
