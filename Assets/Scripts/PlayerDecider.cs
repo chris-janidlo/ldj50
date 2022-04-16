@@ -18,6 +18,7 @@ namespace LDJ50
         // TODO: use cancellation token
         public override UniTask<GameState> DecideMove (GameState currentState, CancellationToken token)
         {
+            Deciding = true;
             PlayerDecisionNeeded.Raise(currentState);
 
             currentTcs = new UniTaskCompletionSource<GameState>();
@@ -26,6 +27,7 @@ namespace LDJ50
 
         public void PlayerDecisionMade (GameState decision)
         {
+            Deciding = false;
             currentTcs.TrySetResult(decision);
         }
     }

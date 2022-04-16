@@ -23,7 +23,7 @@ namespace LDJ50.MCTS
             this.searchParameters = searchParameters;
         }
 
-        public GameState Search (GameState startingState)
+        public GameState Search (GameState startingState, Action<float> setProgress)
         {
             MCTSNode root = previousChoice?.ChildWithState(startingState) ?? new MCTSNode(startingState, searchParameters);
             root.Detach();
@@ -34,6 +34,7 @@ namespace LDJ50.MCTS
                 MCTSNode leaf = traverse(root); // selection and expansion
                 float score = rollout(leaf); // rollout
                 leaf.BackPropagate(score); // back propagation
+                setProgress((float) i / searchParameters.Iterations);
             }
 
             previousChoice = root.BestChild();

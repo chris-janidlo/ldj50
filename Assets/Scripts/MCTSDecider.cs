@@ -10,7 +10,7 @@ using LDJ50.MCTS;
 namespace LDJ50
 {
     [CreateAssetMenu(menuName = "LDJ50/Deciders/MCTS", fileName = "newMctsDecider.asset")]
-    public class MCTSDecider : IDecider
+    public class MCTSDecider : AIDecider
     {
         public MCTSParameters SearchParameters;
 
@@ -18,9 +18,15 @@ namespace LDJ50
 
         public override async UniTask<GameState> DecideMove (GameState currentState, CancellationToken token)
         {
+            Deciding = true;
+            Progress = 0;
+
             if (searcher == null) searcher = new MCTSSearcher(currentState.CurrentPlayer, SearchParameters);
 
-            return await Task.Run(() => searcher.Search(currentState), cancellationToken: token);
+            GameState result = await Task.Run(() => searcher.Search(currentState, p => Progress = p), cancellationToken: token);
+            Deciding = false;
+
+            return result;
         }
     }
 }

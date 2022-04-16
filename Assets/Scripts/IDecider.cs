@@ -9,6 +9,8 @@ namespace LDJ50
 {
     public abstract class IDecider : ScriptableObject
     {
+        public virtual bool Deciding { get; protected set;  }
+
         public abstract UniTask<GameState> DecideMove (GameState currentState, CancellationToken token);
     }
 }
