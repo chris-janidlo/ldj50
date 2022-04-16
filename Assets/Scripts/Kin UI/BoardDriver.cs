@@ -41,12 +41,12 @@ namespace LDJ50.KinUI
         GameState masterState, workingState;
 
         Vector2Int currentlyMoving, currentTarget;
-        List<string> pieceIdsMoved;
+        List<char> pieceIdsMoved;
 
         void Awake ()
         {
             positionMap = new Dictionary<Vector2Int, Cell>();
-            pieceIdsMoved = new List<string>();
+            pieceIdsMoved = new List<char>();
 
             foreach (var cell in Cells)
             {

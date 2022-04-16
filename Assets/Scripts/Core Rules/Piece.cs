@@ -7,7 +7,7 @@ namespace LDJ50.CoreRules
 {
     public struct Piece
     {
-        public string ID;
+        public char ID;
         public Player Owner;
 
         public Form Form;
@@ -22,7 +22,7 @@ namespace LDJ50.CoreRules
 
         public override int GetHashCode () => (Owner, Form, Position).GetHashCode(); // deliberately exclude ID from the hashcode computation because we use the hashcode to calculate value equality, and we want to treat two pieces that are identical except for their ID as equal when comparing board layouts
 
-        public Piece (string id, Player owner, Form form, Vector2Int position)
+        public Piece (char id, Player owner, Form form, Vector2Int position)
         {
             ID = id;
             Owner = owner;

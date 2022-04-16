@@ -18,19 +18,19 @@ namespace LDJ50.CoreRules
         {
             Board board = Board.CreateBoard();
 
-            void addPiece (Player owner, string id, Vector2Int position)
+            void addPiece (Player owner, char id, Vector2Int position)
             {
                 Piece piece = new Piece(id, owner, Form.Scientist, position);
                 board.SetPiece(piece, position);
             }
 
-            addPiece(Player.Blue, "B", new Vector2Int(1, 0));
-            addPiece(Player.Blue, "b", new Vector2Int(0, 1));
+            addPiece(Player.Blue, 'B', new Vector2Int(1, 0));
+            addPiece(Player.Blue, 'b', new Vector2Int(0, 1));
 
             int redCorner = Board.SIDE_LENGTH - 1;
 
-            addPiece(Player.Red, "R", new Vector2Int(redCorner - 1, redCorner));
-            addPiece(Player.Red, "r", new Vector2Int(redCorner, redCorner - 1));
+            addPiece(Player.Red, 'R', new Vector2Int(redCorner - 1, redCorner));
+            addPiece(Player.Red, 'r', new Vector2Int(redCorner, redCorner - 1));
 
             return new GameState
             {
