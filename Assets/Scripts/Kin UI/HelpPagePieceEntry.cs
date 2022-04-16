@@ -12,13 +12,6 @@ namespace LDJ50.KinUI
 {
     public class HelpPagePieceEntry : MonoBehaviour
     {
-        [Serializable]
-        public class Cell
-        {
-            public Vector2Int Coordinates;
-            public Image Image;
-        }
-
         public Form Form;
 
         public Color ActiveBoardCellColor;
@@ -26,7 +19,7 @@ namespace LDJ50.KinUI
 
         public List<Image> PieceImages;
         public TextMeshProUGUI Name;
-        public List<Cell> BoardCells;
+        public List<Image> BoardCells;
         public EnumMap<Form, Image> FormTransformationImages;
         public TextMeshProUGUI CellInteractionText;
 
@@ -52,15 +45,18 @@ namespace LDJ50.KinUI
 
         void drawMovement ()
         {
-            Board blankBoard = Board.CreateBoard();
-            Vector2Int boardCenter = new Vector2Int(2, 2);
+            int sideLength = (int) Math.Sqrt(BoardCells.Count);
+            Board fakeBoard = new Board(sideLength);
+            Vector2Int boardCenter = new Vector2Int(sideLength / 2, sideLength / 2);
 
-            var cellsByPosition = BoardCells.ToDictionary(c => c.Coordinates, c => c.Image);
+            List<Vector2Int> validPositions = Form.GetLegalBoardPositions(boardCenter, fakeBoard).ToList();
 
-            foreach (var position in Form.GetLegalBoardPositions(boardCenter, blankBoard))
+            for (int i = 0; i < BoardCells.Count; i++)
             {
-                if (position == boardCenter) continue;
-                cellsByPosition[position].color = ActiveBoardCellColor;
+                Vector2Int coordinate = new Vector2Int(i % sideLength, i / sideLength);
+                if (coordinate == boardCenter) continue;
+
+                if (validPositions.Contains(coordinate)) BoardCells[i].color = ActiveBoardCellColor;
             }
         }
 

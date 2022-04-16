@@ -9,13 +9,17 @@ namespace LDJ50.CoreRules
         public const int SIDE_LENGTH = 5;
 
         public Piece?[,] Positions;
+        private readonly int SideLength;
+
+        public Board (int sideLength)
+        {
+            SideLength = sideLength;
+            Positions = new Piece?[sideLength, sideLength];
+        }
 
         public static Board CreateBoard ()
         {
-            return new Board
-            {
-                Positions = new Piece?[SIDE_LENGTH, SIDE_LENGTH]
-            };
+            return new Board(SIDE_LENGTH);
         }
 
         public static Board DeepClone (Board other)
@@ -34,11 +38,11 @@ namespace LDJ50.CoreRules
             return result;
         }
 
-        public static bool InBounds (Vector2Int position)
+        public bool InBounds (Vector2Int position)
         {
             return
-                position.x >= 0 && position.x < SIDE_LENGTH &&
-                position.y >= 0 && position.y < SIDE_LENGTH;
+                position.x >= 0 && position.x < SideLength &&
+                position.y >= 0 && position.y < SideLength;
         }
 
         public override int GetHashCode ()

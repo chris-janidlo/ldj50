@@ -97,7 +97,7 @@ namespace LDJ50.CoreRules
                 for (int r = 1; r <= range; r++)
                 {
                     Vector2Int candidatePosition = currentPosition + dir * r;
-                    if (!Board.InBounds(candidatePosition)) break;
+                    if (!board.InBounds(candidatePosition)) break;
 
                     Piece? pieceAtTarget = board.GetPiece(candidatePosition);
 
