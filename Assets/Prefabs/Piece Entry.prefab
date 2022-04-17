@@ -3596,9 +3596,9 @@ MonoBehaviour:
   InteractionDescriptions:
     m_enums: 020000000000000001000000
     m_values:
-    - captures opposing pieces
+    - captures enemy pieces
     - 
-    - swaps with opposing pieces
+    - swaps with enemy pieces
   PieceImages:
   - {fileID: 3399417021530560569}
   - {fileID: 3023164341790263838}
