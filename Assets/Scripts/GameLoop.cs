@@ -13,6 +13,7 @@ namespace LDJ50
     public class GameLoop : MonoBehaviour
     {
         public IDeciderVariable BlueDecider, RedDecider;
+        public GameOverOverlay GameOverOverlay;
 
         public GameState GameState { get; private set; }
 
@@ -33,12 +34,7 @@ namespace LDJ50
                 GameState = await nextDecider.DecideMove(GameState, token);
             }
 
-            endGame(GameState.CurrentPlayer);
-        }
-
-        void endGame (Player loser)
-        {
-            throw new System.NotImplementedException("TODO: loss scene");
+            GameOverOverlay.ShowOverlay(GameState.CurrentPlayer);
         }
     }
 }
