@@ -4392,8 +4392,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 873ec05fb17254285b145986da18d1c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlueDecider: {fileID: 11400000, guid: aa5c6c04d2ab6482291ffc992d11d316, type: 2}
-  RedDecider: {fileID: 11400000, guid: a61bdf2692d8c43e2a96a908973f3a7f, type: 2}
+  BlueDecider: {fileID: 11400000, guid: 41e6eb1e592e4421395bd4ff84905fda, type: 2}
+  RedDecider: {fileID: 11400000, guid: 8d5e658d4347e4ac0b3439ebdc558970, type: 2}
 --- !u!4 &318866093
 Transform:
   m_ObjectHideFlags: 0
