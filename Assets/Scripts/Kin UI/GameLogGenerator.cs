@@ -32,7 +32,7 @@ namespace LDJ50.KinUI
         string pieceState (Piece piece)
         {
             var x = (char) (piece.Position.x + 'a');
-            var y = piece.Position.y.ToString();
+            var y = (piece.Position.y + 1).ToString();
 
             string position = x + y;
             string formName = piece.Form.ToString().ToLower();
