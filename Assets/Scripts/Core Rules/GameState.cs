@@ -116,6 +116,11 @@ namespace LDJ50.CoreRules
                 : Player.Blue;
         }
 
+        public Piece? GetPieceById (char id)
+        {
+            return Board.GetPieceById(id);
+        }
+
         // assumes move is legal
         public static GameState ApplyMove (GameState originalState, Piece oldPiece, Piece newPiece, bool changePlayer)
         {

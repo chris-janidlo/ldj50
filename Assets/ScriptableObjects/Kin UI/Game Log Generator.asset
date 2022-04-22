@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae2301a5e22324453b88efc96262b982, type: 3}
-  m_Name: Player Decision Needed
+  m_Script: {fileID: 11500000, guid: 3847f1673187f4049902c2f7329f4e09, type: 3}
+  m_Name: Game Log Generator
   m_EditorClassIdentifier: 
-  _developerDescription: 
-  _replayBufferSize: 0
+  PieceStateFormat: '{1} {0}'
+  PieceMoveLogFormat: '{0} -> {1}'

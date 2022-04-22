@@ -13,6 +13,7 @@ namespace LDJ50
     public class GameLoop : MonoBehaviour
     {
         public IDeciderVariable BlueDecider, RedDecider;
+        public GameStatePairEvent DecisionMade;
         public GameOverOverlay GameOverOverlay;
 
         public GameState GameState { get; private set; }
@@ -31,7 +32,11 @@ namespace LDJ50
                 IDecider nextDecider = GameState.CurrentPlayer == Player.Blue
                     ? BlueDecider.Value
                     : RedDecider.Value;
-                GameState = await nextDecider.DecideMove(GameState, token);
+                GameState newState = await nextDecider.DecideMove(GameState, token);
+
+                DecisionMade.Raise(new GameStatePair { Item1 = GameState, Item2 = newState });
+
+                GameState = newState;
             }
 
             GameOverOverlay.ShowOverlay(GameState.CurrentPlayer);

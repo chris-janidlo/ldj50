@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
@@ -107,6 +108,11 @@ namespace LDJ50.CoreRules
                 if (piece?.Owner == player) return false;
             }
             return true;
+        }
+
+        public Piece? GetPieceById (char id)
+        {
+            return Positions.Cast<Piece?>().FirstOrDefault(p => p?.ID == id);
         }
     }
 }
