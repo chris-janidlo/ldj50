@@ -3,6 +3,7 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityAtoms.LDJ50Atoms;
 using Cysharp.Threading.Tasks;
@@ -18,8 +19,12 @@ namespace LDJ50
 
         public GameState GameState { get; private set; }
 
+        [DllImport("__Internal")]
+        static extern int test();
+
         void Start ()
         {
+            Debug.Log(test());
             StartCoroutine(PlayOutGame(this.GetCancellationTokenOnDestroy()).ToCoroutine());
         }
 
